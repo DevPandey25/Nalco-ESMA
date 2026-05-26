@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../store/useAppStore';
 import nalcoLogo from '../assets/nalco-logo.png';
+import nalcoOfficeBg from '../assets/nalco_office.png';
 
 export default function LoginPage() {
   const [employeeId, setEmployeeId] = useState('');
@@ -37,12 +38,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-height-screen flex items-center justify-center bg-nalco-beige p-6">
+    <div 
+      className="min-height-screen flex items-center justify-center bg-cover bg-center p-6 relative"
+      style={{ backgroundImage: `url(${nalcoOfficeBg})` }}
+    >
+      {/* Background dark overlay to ensure readability */}
+      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] z-0" />
+
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-md relative z-10"
       >
         <div className="enterprise-card overflow-hidden">
           {/* Header */}
