@@ -1,0 +1,58 @@
+// Strict state definitions
+const WORKFLOW_STATES = {
+    DRAFT: 'DRAFT',
+    SUBMITTED: 'SUBMITTED',
+    RECOMMENDED: 'RECOMMENDED',
+    APPROVED: 'APPROVED',
+    IMPLEMENTED: 'IMPLEMENTED',
+    REJECTED: 'REJECTED',
+    RETURNED: 'RETURNED'
+};
+
+// Actions mapped to workflow progress
+const WORKFLOW_ACTIONS = {
+    SUBMIT: 'SUBMIT',
+    RECOMMEND: 'RECOMMEND',
+    APPROVE: 'APPROVE',
+    IMPLEMENT: 'IMPLEMENT',
+    REJECT: 'REJECT',
+    RETURN: 'RETURN'
+};
+
+// Role-based execution permissions table
+const ROLE_PERMISSIONS = {
+    Employee: [WORKFLOW_ACTIONS.SUBMIT],
+    HOD: [WORKFLOW_ACTIONS.RECOMMEND, WORKFLOW_ACTIONS.REJECT, WORKFLOW_ACTIONS.RETURN],
+    'Competent Authority': [WORKFLOW_ACTIONS.APPROVE, WORKFLOW_ACTIONS.REJECT],
+    'Network Admin': [WORKFLOW_ACTIONS.IMPLEMENT],
+    'IT Admin': Object.values(WORKFLOW_ACTIONS) // Full override
+};
+
+// Stage mapping helpers
+const STATE_STAGE_MAP = {
+    [WORKFLOW_STATES.DRAFT]: 'Submission',
+    [WORKFLOW_STATES.SUBMITTED]: 'HOD Review',
+    [WORKFLOW_STATES.RECOMMENDED]: 'CA Approval',
+    [WORKFLOW_STATES.APPROVED]: 'Implementation',
+    [WORKFLOW_STATES.IMPLEMENTED]: 'Completed',
+    [WORKFLOW_STATES.REJECTED]: 'Rejected',
+    [WORKFLOW_STATES.RETURNED]: 'Revision'
+};
+
+const ASSIGNED_TO_MAP = {
+    [WORKFLOW_STATES.DRAFT]: 'Employee',
+    [WORKFLOW_STATES.SUBMITTED]: 'HOD',
+    [WORKFLOW_STATES.RECOMMENDED]: 'CA',
+    [WORKFLOW_STATES.APPROVED]: 'Network Admin',
+    [WORKFLOW_STATES.IMPLEMENTED]: 'None',
+    [WORKFLOW_STATES.REJECTED]: 'Employee',
+    [WORKFLOW_STATES.RETURNED]: 'Employee'
+};
+
+module.exports = {
+    WORKFLOW_STATES,
+    WORKFLOW_ACTIONS,
+    ROLE_PERMISSIONS,
+    STATE_STAGE_MAP,
+    ASSIGNED_TO_MAP
+};

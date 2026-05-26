@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NALCO ESMA | Enterprise Workflow</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">N</div>
+        <div>
+          <h1>NALCO ESMA</h1>
+          <span>External Storage Media Access</span>
+        </div>
+      </div>
+
+      <nav class="nav-list" aria-label="Primary">
+        <a href="#dashboard" class="nav-item active" data-page-link="dashboard">Dashboard</a>
+        <a href="#request" class="nav-item" data-page-link="request">Request Form</a>
+        <a href="#data" class="nav-item" data-page-link="data">Data Management</a>
+        <a href="#approvals" class="nav-item" data-page-link="approvals">Approvals</a>
+        <a href="#reports" class="nav-item" data-page-link="reports">Reports</a>
+      </nav>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="pageCrumb">Dashboard</p>
+          <h2 id="pageTitle">ESMA Command Center</h2>
+        </div>
+        <div class="topbar-actions">
+          <label class="role-switcher">
+            <span>Active Role</span>
+            <select id="roleSelect">
+              <option value="Employee">Employee</option>
+              <option value="HOD">HOD</option>
+              <option value="Competent Authority">Competent Authority</option>
+              <option value="Network Admin">Network Admin</option>
+              <option value="IT Admin">IT Admin</option>
+            </select>
+          </label>
+          <button class="btn secondary" id="exportBtn" type="button">Export CSV</button>
+          <button class="btn primary" id="newRequestBtn" type="button">New Request</button>
+        </div>
+      </header>
+
+      <section class="summary-grid" id="summaryCards" aria-label="Request summary"></section>
+
+      <section class="page-section active" id="dashboardPage" data-page="dashboard">
+        <div class="dashboard-grid">
+          <section class="panel">
+            <div class="section-toolbar compact">
+              <div>
+                <h3>Recent Activity</h3>
+                <p>Workflow movement across ESMA requests</p>
+              </div>
+            </div>
+            <div class="activity-list" id="recentActivity"></div>
+          </section>
+          <section class="panel">
+            <div class="section-toolbar compact">
+              <div>
+                <h3>My Requests</h3>
+                <p>Visible to the current role</p>
+              </div>
+            </div>
+            <div class="mini-table" id="myRequests"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="page-section" id="requestPage" data-page="request">
+        <form class="request-form panel" id="requestForm">
+          <div class="form-heading">
+            <div>
+              <h3>NALCO External Storage Media Access Form</h3>
+              <p>Employee submission with digital signature</p>
+            </div>
+            <span class="status-badge status-DRAFT">Draft</span>
+          </div>
+
+          <div class="form-grid">
+            <label>
+              <span>Employee Name</span>
+              <input name="employeeName" required placeholder="Employee name">
+            </label>
+            <label>
+              <span>Personal No</span>
+              <input name="personalNo" required placeholder="Personal number">
+            </label>
+            <label>
+              <span>Designation</span>
+              <input name="designation" required placeholder="Designation">
+            </label>
+            <label>
+              <span>Department</span>
+              <input name="department" required placeholder="Department">
+            </label>
+            <label>
+              <span>Unit</span>
+              <select name="unit" required>
+                <option value="">Select unit</option>
+                <option>CPP</option>
+                <option>Mines</option>
+                <option>Refinery</option>
+                <option>Smelter</option>
+                <option>Corporate Office</option>
+                <option>New Delhi</option>
+                <option>Kolkata</option>
+                <option>Mumbai</option>
+              </select>
+            </label>
+            <label>
+              <span>Media Type</span>
+              <select name="mediaType" required>
+                <option value="">Select media</option>
+                <option>USB</option>
+                <option>CD</option>
+                <option>External HDD</option>
+                <option>External SSD</option>
+                <option>Others</option>
+              </select>
+            </label>
+            <label>
+              <span>From Date</span>
+              <input name="fromDate" type="date" required>
+            </label>
+            <label>
+              <span>To Date</span>
+              <input name="toDate" type="date" required>
+            </label>
+          </div>
+
+          <label class="field-block">
+            <span>Justification</span>
+            <textarea name="justification" rows="4" required placeholder="Business justification for external media access"></textarea>
+          </label>
+
+          <div class="approval-matrix" id="formSignatureMatrix"></div>
+
+          <div class="modal-actions">
+            <button class="btn ghost" type="reset">Clear</button>
+            <button class="btn primary" type="submit">Submit & Digitally Sign</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="page-section" id="dataPage" data-page="data">
+        <section class="data-management-section">
+          <div class="section-toolbar">
+            <div>
+              <h3>All Requests</h3>
+              <p id="resultMeta">0 records</p>
+            </div>
+            <div class="toolbar-controls">
+              <label class="search-box">
+                <span>Search</span>
+                <input id="searchInput" type="search" placeholder="Name, ID, department">
+              </label>
+              <label>
+                <span>Status</span>
+                <select id="statusFilter">
+                  <option value="all">All Status</option>
+                  <option value="DRAFT">Draft</option>
+                  <option value="SUBMITTED">Submitted</option>
+                  <option value="RECOMMENDED">Recommended</option>
+                  <option value="APPROVED">Approved</option>
+                  <option value="IMPLEMENTED">Implemented</option>
+                  <option value="REJECTED_L1">Rejected L1</option>
+                  <option value="REJECTED_FINAL">Rejected Final</option>
+                </select>
+              </label>
+              <label>
+                <span>Sort</span>
+                <select id="sortSelect">
+                  <option value="dateDesc">Date</option>
+                  <option value="statusAsc">Status</option>
+                </select>
+              </label>
+              <div class="view-toggle" role="group" aria-label="View toggle">
+                <button class="toggle-btn active" id="tableViewBtn" type="button">Table</button>
+                <button class="toggle-btn" id="boardViewBtn" type="button">Board</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="workflow-tabs" id="workflowTabs" role="tablist" aria-label="Workflow status"></div>
+
+          <div class="advanced-table view-panel active" id="tablePanel">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Serial No</th>
+                    <th>Request ID</th>
+                    <th>Employee</th>
+                    <th>Department</th>
+                    <th>Unit</th>
+                    <th>Media</th>
+                    <th>Dates</th>
+                    <th>Status</th>
+                    <th>Signature Status</th>
+                    <th>Assigned To</th>
+                    <th>Approval Stage</th>
+                    <th>Last Updated</th>
+                    <th>Rejection Reason</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="requestTableBody"></tbody>
+              </table>
+            </div>
+            <div class="pagination-bar">
+              <span id="pageInfo">Page 1 of 1</span>
+              <div>
+                <button class="btn ghost" id="prevPageBtn" type="button">Previous</button>
+                <button class="btn ghost" id="nextPageBtn" type="button">Next</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="kanban-board view-panel" id="boardPanel" aria-label="Kanban board"></div>
+        </section>
+      </section>
+
+      <section class="page-section" id="approvalsPage" data-page="approvals">
+        <section class="panel">
+          <div class="section-toolbar">
+            <div>
+              <h3>Role-Based Approval Queue</h3>
+              <p id="approvalMeta">Requests requiring action</p>
+            </div>
+            <span class="status-badge status-APPROVED" id="roleScopeBadge">Employee</span>
+          </div>
+          <div class="table-wrap">
+            <table class="approval-table">
+              <thead>
+                <tr>
+                  <th>Request</th>
+                  <th>Employee</th>
+                  <th>Department</th>
+                  <th>Status</th>
+                  <th>Assigned To</th>
+                  <th>Signature Trail</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="approvalTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="page-section" id="reportsPage" data-page="reports">
+        <div class="reports-grid">
+          <section class="panel">
+            <div class="section-toolbar compact">
+              <div>
+                <h3>Requests Per Month</h3>
+                <p>Volume trend</p>
+              </div>
+            </div>
+            <div class="bar-chart" id="monthlyChart"></div>
+          </section>
+          <section class="panel">
+            <div class="section-toolbar compact">
+              <div>
+                <h3>Approval Quality</h3>
+                <p>Approval and rejection rate</p>
+              </div>
+            </div>
+            <div class="rate-grid" id="rateCards"></div>
+          </section>
+        </div>
+        <section class="panel">
+          <div class="section-toolbar">
+            <div>
+              <h3>Exportable Report</h3>
+              <p>Operational workflow snapshot</p>
+            </div>
+            <button class="btn secondary" id="reportExportBtn" type="button">Export Report</button>
+          </div>
+          <div class="mini-table" id="reportTable"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="modal" id="detailModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Request Detail</p>
+          <h3 id="detailTitle">Request</h3>
+        </div>
+        <button class="icon-btn" data-close="detailModal" type="button" aria-label="Close">x</button>
+      </div>
+      <div class="detail-grid" id="detailContent"></div>
+      <div class="approval-matrix" id="detailSignatureMatrix"></div>
+    </div>
+  </dialog>
+
+  <dialog class="modal" id="workflowModal">
+    <form class="modal-card" method="dialog" id="workflowForm">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Digital Signature</p>
+          <h3 id="workflowTitle">Workflow Action</h3>
+        </div>
+        <button class="icon-btn" data-close="workflowModal" type="button" aria-label="Close">x</button>
+      </div>
+      <label class="field-block">
+        <span id="workflowCommentLabel">Comment</span>
+        <textarea id="workflowCommentInput" rows="4" required placeholder="Add mandatory workflow comment"></textarea>
+      </label>
+      <div class="signature-system">
+        <div>
+          <span class="signature-label">Signature Pad</span>
+          <canvas id="signaturePad" width="520" height="150"></canvas>
+          <div class="signature-actions">
+            <button class="btn ghost" id="clearSignatureBtn" type="button">Clear Pad</button>
+            <button class="btn ghost" id="autoSignatureBtn" type="button">Auto Signature</button>
+          </div>
+        </div>
+        <div class="signature-preview" id="signaturePreview"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn ghost" data-close="workflowModal" type="button">Cancel</button>
+        <button class="btn primary" type="submit" id="confirmWorkflowBtn">Sign & Continue</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="emailModal">
+    <div class="modal-card email-preview">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Email Preview</p>
+          <h3>Request Rejected</h3>
+        </div>
+        <button class="icon-btn" data-close="emailModal" type="button" aria-label="Close">x</button>
+      </div>
+      <div id="emailPreview"></div>
+      <div class="modal-actions">
+        <button class="btn ghost" data-close="emailModal" type="button">Close</button>
+        <a class="btn primary" id="mailToLink" href="#">Open Mail</a>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

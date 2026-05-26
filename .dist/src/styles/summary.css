@@ -1,0 +1,40 @@
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(130px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.summary-card {
+  min-height: 96px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--nalco-blue);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 8px 18px rgba(0, 36, 70, 0.06);
+}
+
+.summary-card[data-tone="pending"] {
+  border-left-color: var(--warning);
+}
+
+.summary-card[data-tone="approved"],
+.summary-card[data-tone="implemented"] {
+  border-left-color: var(--success);
+}
+
+.summary-card[data-tone="rejected"] {
+  border-left-color: var(--danger);
+}
+
+.summary-card span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.summary-card strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 28px;
+}

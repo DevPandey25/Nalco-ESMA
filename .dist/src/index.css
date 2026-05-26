@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-nalco-red: #c62828;
+  --color-nalco-blue: #1a1a1a;
+  --color-nalco-blue-dark: #000000;
+  --color-nalco-beige: #faf7f0; /* More yellowish beige */
+  
+  --color-enterprise-surface: #ffffff;
+  --color-enterprise-soft: #f5f5f5;
+  --color-enterprise-line: #e0e0e0;
+  --color-enterprise-ink: #111111;
+  --color-enterprise-muted: #666666;
+
+  --shadow-premium: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --shadow-premium-hover: 0 20px 40px -10px rgba(0, 0, 0, 0.12), 0 8px 12px -4px rgba(0, 0, 0, 0.06);
+  
+  --font-sans: "Inter", "Roboto", "system-ui", "sans-serif";
+}
+
+@layer base {
+  body {
+    @apply bg-nalco-beige text-enterprise-ink font-sans antialiased;
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight text-nalco-blue;
+  }
+}
+
+@layer components {
+  .enterprise-card {
+    @apply bg-white border border-enterprise-line rounded-xl shadow-premium transition-all duration-300;
+  }
+
+  .enterprise-card:hover {
+    @apply shadow-premium-hover border-nalco-blue/20 -translate-y-1;
+  }
+
+  .btn-primary {
+    @apply bg-nalco-red text-white font-bold py-2 px-6 rounded-lg transition-all duration-300 outline-none transform active:scale-95 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-nalco-red/30;
+  }
+  
+  .btn-primary:focus {
+    @apply ring-4 ring-nalco-red/20;
+  }
+
+  .btn-secondary {
+    @apply bg-nalco-blue text-white font-bold py-2 px-6 rounded-lg transition-all duration-300 outline-none transform active:scale-95 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-nalco-blue/30;
+  }
+
+  .btn-secondary:focus {
+    @apply ring-4 ring-nalco-blue/20;
+  }
+
+  .input-field {
+    @apply w-full bg-white border-2 border-enterprise-line rounded-lg py-2.5 px-4 outline-none transition-all duration-300 hover:border-nalco-blue/30 focus:border-nalco-blue focus:ring-4 focus:ring-nalco-blue/10;
+  }
+
+  .input-field::placeholder {
+    @apply text-enterprise-muted transition-opacity duration-300;
+  }
+  
+  .input-field:focus::placeholder {
+    @apply opacity-50;
+  }
+
+  .nav-link-active {
+    @apply text-nalco-red border-r-4 border-nalco-red bg-nalco-red/5 font-bold;
+  }
+}
+
+/* Custom scrollbar for enterprise feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--color-enterprise-soft);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-enterprise-line);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-enterprise-muted);
+}

@@ -1,0 +1,64 @@
+.reports-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.bar-chart {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.bar-track {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e7edf4;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--nalco-blue), var(--nalco-orange));
+}
+
+.rate-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 12px;
+  padding: 18px;
+}
+
+.rate-card {
+  min-height: 120px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+
+.rate-card span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.rate-card strong {
+  display: block;
+  margin-top: 12px;
+  color: var(--nalco-blue);
+  font-size: 34px;
+}
+
+.approval-table {
+  min-width: 1100px;
+}

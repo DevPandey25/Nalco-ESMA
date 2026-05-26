@@ -1,0 +1,233 @@
+.data-management-section {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.search-box {
+  min-width: 240px;
+}
+
+.view-toggle {
+  align-items: center;
+  gap: 0;
+  min-height: 38px;
+  overflow: hidden;
+  border: 1px solid #c9d4e1;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.toggle-btn {
+  min-height: 36px;
+  padding: 0 12px;
+  background: transparent;
+  color: var(--muted);
+}
+
+.toggle-btn.active {
+  background: var(--nalco-blue);
+  color: #fff;
+}
+
+.workflow-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 18px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line);
+}
+
+.tab-btn {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid #c9d4e1;
+  border-radius: 18px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tab-btn.active {
+  border-color: var(--nalco-blue);
+  background: #e7f1fb;
+  color: var(--nalco-blue);
+}
+
+.view-panel {
+  display: none;
+}
+
+.view-panel.active {
+  display: block;
+}
+
+.kanban-board {
+  display: none;
+  grid-template-columns: repeat(6, minmax(210px, 1fr));
+  gap: 12px;
+  padding: 18px;
+  overflow-x: auto;
+}
+
+.kanban-board.active {
+  display: grid;
+}
+
+.kanban-column {
+  min-height: 420px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+
+.kanban-column header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 800;
+}
+
+.kanban-list {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.kanban-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #d3dde8;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0, 36, 70, 0.08);
+  cursor: grab;
+}
+
+.kanban-card:active {
+  cursor: grabbing;
+}
+
+.kanban-card strong {
+  color: var(--nalco-blue);
+}
+
+.kanban-card span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.pagination-bar {
+  padding: 14px 18px;
+}
+
+.pagination-bar span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.assignment-dropdown {
+  min-width: 170px;
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #334155;
+  background-color: #fff;
+  transition: all 0.2s ease;
+  outline: none;
+  cursor: pointer;
+}
+
+.assignment-dropdown:focus,
+.assignment-dropdown:hover:not(:disabled) {
+  border-color: var(--nalco-blue);
+  box-shadow: 0 0 0 3px rgba(0, 75, 141, 0.1);
+}
+
+.assignment-dropdown:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.reason-cell {
+  max-width: 190px;
+}
+
+.reason-text {
+  display: inline-block;
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--danger);
+  font-weight: 700;
+  cursor: help;
+  padding: 4px 0;
+}
+
+.action-panel {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 250px;
+}
+
+.action-panel .btn {
+  min-height: 28px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+/* Specific Action Button Variants inside Table */
+.action-panel .btn.ghost {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+.action-panel .btn.ghost:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.action-panel .btn.primary {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+.action-panel .btn.primary:hover {
+  background: #16a34a;
+  color: #fff;
+}
+
+.action-panel .btn.danger {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+.action-panel .btn.danger:hover {
+  background: #dc2626;
+  color: #fff;
+}
+
+.action-panel .btn.secondary {
+  /* Using this for Recommend/Implement */
+  background: #faf5ff;
+  color: #9333ea;
+  border: 1px solid #e9d5ff;
+}
+.action-panel .btn.secondary:hover {
+  background: #9333ea;
+  color: #fff;
+}
