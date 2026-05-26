@@ -10,6 +10,9 @@ dotenv.config();
 
 const app = express();
 
+// Trust proxy for express-rate-limit when deployed behind reverse proxies (Render, Heroku, Nginx, etc.)
+app.set('trust proxy', 1);
+
 // Rate limiting middleware for API protection
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
