@@ -25,7 +25,7 @@ node_modules/
 # Build outputs
 dist/
 build/
-.dist/dist/
+frontend/dist/
 
 # OS files
 .DS_Store
