@@ -80,6 +80,33 @@ class NotificationService {
         if (sendViaEmail && recipient.includes('@')) {
             try {
                 const htmlMessage = message.replace(/\n/g, '<br/>');
+                
+                // Bypasses Render SMTP port blocking by sending over standard HTTPS (Port 443)
+                if (process.env.RESEND_API_KEY) {
+                    console.log('📨 Dispatching email via Resend HTTP REST API...');
+                    const response = await fetch('https://api.resend.com/emails', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            from: 'NALCO ESMA <onboarding@resend.dev>',
+                            to: recipient,
+                            subject: title,
+                            html: `<div style="font-family:Arial,sans-serif;padding:20px;"><h3>${title}</h3><p>${htmlMessage}</p></div>`
+                        })
+                    });
+                    
+                    const resData = await response.json();
+                    if (!response.ok) {
+                        throw new Error(resData.message || 'Resend API returned an error');
+                    }
+                    console.log(`📧 Email sent successfully via Resend to ${recipient}`);
+                    return;
+                }
+
+                // Fallback to standard SMTP (May time out on Render if SMTP ports are blocked)
                 await transporter.sendMail({
                     from: '"NALCO ESMA Platform" <noreply@nalco.example.com>',
                     to: recipient,
@@ -88,7 +115,7 @@ class NotificationService {
                     html: `<div style="font-family:Arial,sans-serif;padding:20px;"><h3>${title}</h3><p>${htmlMessage}</p></div>`
                 });
             } catch (error) {
-                console.error(`📧 SMTP direct transmission error to ${recipient}:`, error.message);
+                console.error(`📧 Email transmission error to ${recipient}:`, error.message);
             }
         }
     }
@@ -111,6 +138,22 @@ if (notificationQueue) {
             const { recipient, title, message, sendViaEmail } = job.data;
             if (sendViaEmail && recipient.includes('@')) {
                 const htmlMessage = message.replace(/\n/g, '<br/>');
+                if (process.env.RESEND_API_KEY) {
+                    await fetch('https://api.resend.com/emails', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            from: 'NALCO ESMA <onboarding@resend.dev>',
+                            to: recipient,
+                            subject: title,
+                            html: `<div style="font-family:Arial,sans-serif;padding:20px;"><h3>${title}</h3><p>${htmlMessage}</p></div>`
+                        })
+                    });
+                    return;
+                }
                 await transporter.sendMail({
                     from: '"NALCO ESMA Platform" <noreply@nalco.example.com>',
                     to: recipient,
