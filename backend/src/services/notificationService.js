@@ -23,6 +23,7 @@ if (process.env.USE_REDIS_QUEUE === 'true') {
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.mailtrap.io',
     port: Number(process.env.SMTP_PORT || 2525),
+    secure: Number(process.env.SMTP_PORT || 2525) === 465, // true for port 465 (SSL), false for 587 (TLS)
     auth: {
         user: process.env.SMTP_USER || 'user',
         pass: process.env.SMTP_PASS || 'pass'
