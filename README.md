@@ -1,5 +1,7 @@
 # NALCO ESMA (Enterprise System Media Access)
 
+![Dashboard Mockup](readme_assets/dashboard_mockup.png)
+
 NALCO ESMA is a full-stack, enterprise-grade workflow authorization application designed to manage, review, and audit employee requests for external storage media access (e.g., USB, CD, External HDD/SSD). 
 
 Built with a **React-Vite** frontend and a **Node.js/Express** backend, it features multi-level cryptographic digital signing, automated email notifications, real-time state synchronization, security rate-limiting, and AI-driven transfer risk assessment.
@@ -7,6 +9,8 @@ Built with a **React-Vite** frontend and a **Node.js/Express** backend, it featu
 ---
 
 ## 🚀 Key Features
+
+![Workflow Flow Diagram](readme_assets/workflow_flow.png)
 
 * **Multi-Stage Workflow Authorization:** Follows a strict organizational hierarchy:
   $$\text{Draft} \longrightarrow \text{Submitted} \longrightarrow \text{HOD Recommended} \longrightarrow \text{Authority Approved} \longrightarrow \text{Network Implemented} \longrightarrow \text{Closed}$$
