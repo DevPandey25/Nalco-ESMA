@@ -3,6 +3,7 @@ import { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import { useAppStore } from './store/useAppStore';
+import { Analytics } from '@vercel/analytics/react';
 
 
 
@@ -50,6 +51,7 @@ export default function App() {
           </Route>
         </Routes>
       </Suspense>
+      <Analytics />
     </BrowserRouter>
   );
 }
