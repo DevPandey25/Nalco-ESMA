@@ -56,7 +56,8 @@ class NotificationService {
             recipient,
             title,
             message,
-            sendViaEmail
+            sendViaEmail,
+            requestId
         };
 
         if (notificationQueue) {
@@ -76,14 +77,43 @@ class NotificationService {
         return notificationRecord;
     }
 
-    async processNotificationImmediately({ recipient, title, message, sendViaEmail }) {
+    async processNotificationImmediately({ recipient, title, message, sendViaEmail, requestId }) {
         if (sendViaEmail && recipient.includes('@')) {
             try {
                 const htmlMessage = message.replace(/\n/g, '<br/>');
                 
+                // Generate PDF attachment if requestId is provided
+                let attachments = [];
+                if (requestId) {
+                    try {
+                        const Request = require('../models/requestModel');
+                        const { generateReceiptPdf } = require('../utils/pdfGenerator');
+                        const reqDoc = await Request.findOne({ requestId });
+                        if (reqDoc) {
+                            console.log(`Generating PDF receipt for request ${requestId} to attach to email...`);
+                            const pdfBuffer = await generateReceiptPdf(reqDoc);
+                            attachments.push({
+                                filename: `ESMA_Receipt_${requestId}.pdf`,
+                                content: pdfBuffer
+                            });
+                        }
+                    } catch (pdfErr) {
+                        console.error('Failed to generate PDF attachment:', pdfErr.message);
+                    }
+                }
+
                 // Bypasses Render SMTP port blocking by sending over standard HTTPS (Port 443)
                 if (process.env.RESEND_API_KEY) {
                     console.log('📨 Dispatching email via Resend HTTP REST API...');
+                    
+                    let resendAttachments = [];
+                    if (attachments.length > 0) {
+                        resendAttachments = attachments.map(att => ({
+                            filename: att.filename,
+                            content: att.content.toString('base64')
+                        }));
+                    }
+
                     const response = await fetch('https://api.resend.com/emails', {
                         method: 'POST',
                         headers: {
@@ -94,7 +124,8 @@ class NotificationService {
                             from: 'NALCO ESMA <onboarding@resend.dev>',
                             to: recipient,
                             subject: title,
-                            html: `<div style="font-family:Arial,sans-serif;padding:20px;"><h3>${title}</h3><p>${htmlMessage}</p></div>`
+                            html: `<div style="font-family:Arial,sans-serif;padding:20px;"><h3>${title}</h3><p>${htmlMessage}</p></div>`,
+                            attachments: resendAttachments
                         })
                     });
                     
@@ -112,7 +143,8 @@ class NotificationService {
                     to: recipient,
                     subject: title,
                     text: message,
-                    html: `<div style="font-family:Arial,sans-serif;padding:20px;"><h3>${title}</h3><p>${htmlMessage}</p></div>`
+                    html: `<div style="font-family:Arial,sans-serif;padding:20px;"><h3>${title}</h3><p>${htmlMessage}</p></div>`,
+                    attachments: attachments
                 });
             } catch (error) {
                 console.error(`📧 Email transmission error to ${recipient}:`, error.message);
@@ -135,10 +167,36 @@ class NotificationService {
 if (notificationQueue) {
     try {
         new Worker('enterprise-notifications', async job => {
-            const { recipient, title, message, sendViaEmail } = job.data;
+            const { recipient, title, message, sendViaEmail, requestId } = job.data;
             if (sendViaEmail && recipient.includes('@')) {
                 const htmlMessage = message.replace(/\n/g, '<br/>');
+                
+                let attachments = [];
+                if (requestId) {
+                    try {
+                        const Request = require('../models/requestModel');
+                        const { generateReceiptPdf } = require('../utils/pdfGenerator');
+                        const reqDoc = await Request.findOne({ requestId });
+                        if (reqDoc) {
+                            const pdfBuffer = await generateReceiptPdf(reqDoc);
+                            attachments.push({
+                                filename: `ESMA_Receipt_${requestId}.pdf`,
+                                content: pdfBuffer
+                            });
+                        }
+                    } catch (pdfErr) {
+                        console.error('Failed to generate PDF attachment:', pdfErr.message);
+                    }
+                }
+
                 if (process.env.RESEND_API_KEY) {
+                    let resendAttachments = [];
+                    if (attachments.length > 0) {
+                        resendAttachments = attachments.map(att => ({
+                            filename: att.filename,
+                            content: att.content.toString('base64')
+                        }));
+                    }
                     await fetch('https://api.resend.com/emails', {
                         method: 'POST',
                         headers: {
@@ -149,7 +207,8 @@ if (notificationQueue) {
                             from: 'NALCO ESMA <onboarding@resend.dev>',
                             to: recipient,
                             subject: title,
-                            html: `<div style="font-family:Arial,sans-serif;padding:20px;"><h3>${title}</h3><p>${htmlMessage}</p></div>`
+                            html: `<div style="font-family:Arial,sans-serif;padding:20px;"><h3>${title}</h3><p>${htmlMessage}</p></div>`,
+                            attachments: resendAttachments
                         })
                     });
                     return;
@@ -159,7 +218,8 @@ if (notificationQueue) {
                     to: recipient,
                     subject: title,
                     text: message,
-                    html: `<div style="font-family:Arial,sans-serif;padding:20px;"><h3>${title}</h3><p>${htmlMessage}</p></div>`
+                    html: `<div style="font-family:Arial,sans-serif;padding:20px;"><h3>${title}</h3><p>${htmlMessage}</p></div>`,
+                    attachments: attachments
                 });
             }
         }, { connection });
